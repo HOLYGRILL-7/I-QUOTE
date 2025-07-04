@@ -22,7 +22,7 @@ const QuoteGen = () => {
       // Show only one random 
        if(data.length > 0) {
         const random = data[Math.floor(Math.random() * data.length)];
-        setQuote(random)
+        setQuote(random);
        }
     } catch (error) {
       console.error("Error fetching quote:", error);
