@@ -12,7 +12,7 @@ const App = () => {
         </Routes>
       </BrowserRouter>
         
-      <QuoteGen />
+      
     </div>
   )
 }
