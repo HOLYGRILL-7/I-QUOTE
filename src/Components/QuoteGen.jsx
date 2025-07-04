@@ -16,7 +16,7 @@ const QuoteGen = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `https://bolls.life/v2/find/KJV?search=${searchTerm}&match_case=false&match_whole=true&page=1`
+        `https://bolls.life/v2/find/YLT?search=${searchTerm}&match_case=false&match_whole=true&limit=128&page=1`
       );
       const data = response.data;
       // Show only one random 
