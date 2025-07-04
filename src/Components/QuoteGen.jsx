@@ -1,6 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { Loader, Copy, SquareArrowOutUpRight, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Loader,
+  Copy,
+  SquareArrowOutUpRight,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 const QuoteGen = () => {
   const [quote, setQuote] = useState(null);
@@ -8,6 +14,7 @@ const QuoteGen = () => {
   const [loading, setLoading] = useState(false);
   const [matches, setMatches] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [copied, setCopied] = useState(false);
 
   const handleSearch = (e) => setSearchTerm(e.target.value);
 
@@ -88,33 +95,34 @@ const QuoteGen = () => {
       bookNames[quote.book]
     } ${quote.chapter}:${quote.verse} (${quote.translation || "NKJV"})`;
     navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  const shareOnTwitter = () => {
+  const shareOnWhatsApp = () => {
     if (!quote) return;
+    const message = `${quote.text.replace(/<\/?[^>]+(>|$)/g, "")} — ${
+      bookNames[quote.book]
+    } ${quote.chapter}:${quote.verse}`;
     const url = `https://bible.com/bible/114/${bookNames[
       quote.book
     ]?.replace(/\s/g, "")}.${quote.chapter}.${quote.verse}`;
-    const tweet = `${quote.text.replace(/<\/?[^>]+(>|$)/g, "")} — ${
-      bookNames[quote.book]
-    } ${quote.chapter}:${quote.verse}`;
+    const fullMessage = `${message} ${url}`;
     window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        tweet
-      )}&url=${encodeURIComponent(url)}`,
+      `https://wa.me/?text=${encodeURIComponent(fullMessage)}`,
       "_blank"
     );
   };
 
   return (
     <div className="bg-gradient-to-b from-slate-900 to bg-slate-950 flex items-center justify-center h-screen">
-      <div className="bg-amber-600 p-6 rounded-lg text-center h-auto w-[40rem]">
+      <div className="bg-amber-600 p-6 rounded-lg text-center h-auto w-full max-w-xl mx-4">
         <h1 className="text-white text-3xl font-bold">I-QUOTE</h1>
 
         <div className="flex justify-center items-center space-x-3 my-5">
           <input
             type="text"
-            value={searchTerm}            
+            value={searchTerm}
             onChange={handleSearch}
             placeholder="Keep your candle lit..."
             className="bg-white rounded-lg w-full h-10 italic px-2 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-all duration-300 ease-in-out"
@@ -122,20 +130,21 @@ const QuoteGen = () => {
         </div>
 
         <div className="bg-slate-950 opacity-95 rounded-lg p-6 text-amber-600 w-full h-auto mt-5 relative">
-          {/* Floating Action Buttons */}
           {quote && (
             <div className="absolute bottom-2 right-2 flex gap-2">
               <button
                 onClick={copyToClipboard}
-                className="p-1 text-white hover:bg-amber-500 rounded"
+                className="p-1 text-white hover:bg-amber-500 rounded flex items-center gap-1"
                 title="Copy"
               >
                 <Copy className="w-4 h-4" />
+                {copied && <span className="text-xs text-white">Copied</span>}
               </button>
+
               <button
-                onClick={shareOnTwitter}
-                className="p-1 text-white hover:bg-blue-500 rounded"
-                title="Share"
+                onClick={shareOnWhatsApp}
+                className="p-1 text-white hover:bg-green-600 rounded"
+                title="Share on WhatsApp"
               >
                 <SquareArrowOutUpRight className="w-4 h-4" />
               </button>
@@ -149,7 +158,7 @@ const QuoteGen = () => {
           ) : quote ? (
             <>
               <p
-                className="text-lg italic"
+                className="text-lg italic break-words"
                 dangerouslySetInnerHTML={{ __html: quote.text }}
               />
               <p className="text-sm text-amber-600 mt-2">
@@ -164,27 +173,22 @@ const QuoteGen = () => {
           )}
         </div>
 
-        {/* Navigation Buttons */}
-        {quote && (
+        {quote && matches.length > 1 && (
           <div className="flex justify-center mt-3 space-x-4">
-            {matches.length > 1 && (
-              <>
-                <button
-                  onClick={handlePrevious}
-                  className="group px-4 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-600 transition-all duration-300 ease-in-out flex items-center gap-1"
-                >
-                  <ChevronLeft className="w-4 h-4 transform transition-transform duration-300 group-hover:-translate-x-1" />Peek
-                </button>
-                <button
-                  onClick={handleNext}
-                  className="group px-4 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-600 transition-all duration-300 ease-in-out flex items-center gap-1"
-                >
-                  Seek
-                  <ChevronRight className="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" />
-                </button>
-
-              </>
-            )}
+            <button
+              onClick={handlePrevious}
+              className="group px-4 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-600 transition-all duration-300 ease-in-out flex items-center gap-1"
+            >
+              <ChevronLeft className="w-4 h-4 transform transition-transform duration-300 group-hover:-translate-x-1" />
+              Peek
+            </button>
+            <button
+              onClick={handleNext}
+              className="group px-4 py-2 bg-amber-700 text-white rounded-lg hover:bg-amber-600 transition-all duration-300 ease-in-out flex items-center gap-1"
+            >
+              Seek
+              <ChevronRight className="w-4 h-4 transform transition-transform duration-300 group-hover:translate-x-1" />
+            </button>
           </div>
         )}
       </div>
