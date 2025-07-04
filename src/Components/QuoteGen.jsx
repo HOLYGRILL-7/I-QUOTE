@@ -116,7 +116,7 @@ const QuoteGen = () => {
             type="text"
             value={searchTerm}            
             onChange={handleSearch}
-            placeholder="Enter a theme..."
+            placeholder="Keep your candle lit..."
             className="bg-white rounded-lg w-full h-10 italic px-2 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-all duration-300 ease-in-out"
           />
         </div>
