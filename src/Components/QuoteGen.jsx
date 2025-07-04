@@ -36,8 +36,7 @@ const QuoteGen = () => {
 
     setLoading(true);
     try {
-      const response = await axios.get(
-        `https://bolls.life/v2/find/YLT?search=${searchTerm}&match_case=false&match_whole=true&limit=128&page=1`
+      const response = await axios.get(`https://bolls.life/v2/find/NKJV?search=${searchTerm}&match_case=false&match_whole=false&limit=128&page=1`
       );
       const data = response.data.results;
 
@@ -85,7 +84,7 @@ const QuoteGen = () => {
                 dangerouslySetInnerHTML={{ __html: quote.text }}
               />
               <p className="text-sm text-amber-600 mt-2">
-                {bookNames[quote.book]} {quote.chapter}:{quote.verse}
+                {bookNames[quote.book]} {quote.chapter}:{quote.verse} ({quote.translation || "NKJV"})
               </p>
             </>
           ) : searchTerm.trim() ? (
