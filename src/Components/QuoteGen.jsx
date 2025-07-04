@@ -58,7 +58,7 @@ const QuoteGen = () => {
 
     try {
       const response = await axios.get(
-        `https://bolls.life/v2/find/NKJV?search=${searchTerm}&match_case=false&match_whole=true&limit=128&page=1`
+        `https://bolls.life/v2/find/NKJV?search=${searchTerm}&match_case=false&match_whole=false&limit=128&page=1`
       );
 
       const data = response.data.results;
